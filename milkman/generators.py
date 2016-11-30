@@ -9,8 +9,6 @@ import uuid
 from django.core.files.storage import DefaultStorage
 from django.utils import timezone
 
-from PIL import Image, ImageDraw
-
 
 DEFAULT_STRING_LENGTH = 8
 DECIMAL_TEMPLATE = "%%d.%%0%dd"
@@ -197,6 +195,8 @@ def random_rgb():
 
 
 def random_image(field):
+    # Delay import to avoid hard dependency
+    from PIL import Image, ImageDraw
 
     color1 = random_rgb()
     color2 = random_rgb()
