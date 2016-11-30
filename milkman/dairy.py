@@ -58,6 +58,21 @@ class MilkmanRegistry(object):
         self.add_generator(models.ImageField, generators.random_image_maker)
         # self.add_generator(models.XMLField, default_generator)
 
+        try:
+            from django.contrib.postgres import fields
+        except ImportError:
+            pass
+        else:
+            self.add_generator(
+                fields.JSONField,
+                generators.random_dict_maker)
+            self.add_generator(
+                fields.HStoreField,
+                generators.random_dict_maker)
+            self.add_generator(
+                fields.ArrayField,
+                generators.random_array_maker)
+
     def add_generator(self, cls, func):
         self.default_generators[cls] = func
 

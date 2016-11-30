@@ -6,6 +6,8 @@ import string
 import sys
 import uuid
 
+import six
+
 from django.core.files.storage import DefaultStorage
 from django.utils import timezone
 
@@ -245,3 +247,19 @@ def random_image(field):
 
 def random_image_maker(field):
     return loop(lambda: random_image(field))
+
+
+def random_array_maker(field):
+    """
+    Generate an array with one value.
+    """
+    from milkman.dairy import milkman
+    return loop(lambda: [six.next(
+        milkman.registry.get(type(field.base_field))(field.base_field)())])
+
+
+def random_dict_maker(field):
+    """
+    Generate a mapping with one key and value, both strings.
+    """
+    return loop(lambda: {random_string(): random_string()})
