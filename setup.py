@@ -28,5 +28,8 @@ setup(
     keywords="django testing mock stub",
     packages=find_packages(exclude=["tests.*", "tests"]),
     include_package_data=True,
+    install_requires=[
+        'six',
+    ],
     zip_safe=False,
 )

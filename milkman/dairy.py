@@ -1,3 +1,5 @@
+import six
+
 from django.db import models
 from django.db.models.fields.related import RelatedField
 
@@ -68,7 +70,7 @@ class MilkTruck(object):
     def __init__(self, model_class):
         self.generators = {}
         
-        if isinstance(model_class, basestring):
+        if isinstance(model_class, six.string_types):
             model_class = self.get_model_class_from_string(model_class)
         self.model_class = model_class
 
@@ -83,7 +85,7 @@ class MilkTruck(object):
 
         model_explicit_values = {}
         related_explicit_values = {}
-        for key, value in explicit_values.iteritems():
+        for key, value in six.iteritems(explicit_values):
             if '__' in key:
                 prefix, sep, postfix = key.partition('__')
                 related_explicit_values.setdefault(prefix, {})
@@ -128,12 +130,12 @@ class MilkTruck(object):
         return False
 
     def set_explicit_values(self, target, explicit_values):
-        for k, v in explicit_values.iteritems():
+        for k, v in six.iteritems(explicit_values):
             if not self.is_m2m(k):
                 setattr(target, k, v)
 
     def set_m2m_explicit_values(self, target, explicit_values):
-        for k, vs in explicit_values.iteritems():
+        for k, vs in six.iteritems(explicit_values):
             if self.is_m2m(k):
                 setattr(target, k, vs)
 
@@ -148,7 +150,7 @@ class MilkTruck(object):
                 explicit_values = related_explicit_values.get(field.name, {})
                 v = the_milkman.deliver(field.rel.to, **explicit_values)
             else:
-                v = self.generator_for(the_milkman.registry, field).next()
+                v = six.next(self.generator_for(the_milkman.registry, field))
             setattr(target, field.name, v)
 
     def set_m2m_fields(self,
